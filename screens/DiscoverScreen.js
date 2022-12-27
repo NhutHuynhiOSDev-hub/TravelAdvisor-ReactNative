@@ -1,11 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useLayoutEffect, useState } from "react";
-import { Image, ScrollView, Text } from "react-native";
+import { Image, ScrollView, Text, TouchableOpacity } from "react-native";
 import { View } from "react-native-animatable";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Attractions, Avatar, Hotels, Restaurants } from "../assets";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import MenuContainer from "../components/MenuContainer";
+import { FontAwesome } from "@expo/vector-icons";
+import ItemCardContainer from "../components/ItemCardContainer";
 
 function DiscoverScreen() {
   const navigation = useNavigation();
@@ -45,7 +47,7 @@ function DiscoverScreen() {
       </View>
 
       <ScrollView>
-        <View className="flex-row items-center justify-between px-8 mt-8">
+        <View className="flex-row items-center justify-between px-4 mt-8">
           <MenuContainer
             key={"hotels"}
             title={"Hotels"}
@@ -67,6 +69,39 @@ function DiscoverScreen() {
             type={type}
             setType={setType}
           />
+        </View>
+
+        <View>
+          <View className="flex-row items-center justify-between px-4 mt-8">
+            <Text className="text-[28px] text-[#0B646B] font-bold">
+              Tool Tips
+            </Text>
+            <TouchableOpacity className="flex-row items-center justify-center space-x-2">
+              <Text className="text-[20px] text-[#A0C4C7] font-bold">
+                Explore
+              </Text>
+              <FontAwesome name="long-arrow-right" size={24} color="#A0C4C7" />
+            </TouchableOpacity>
+          </View>
+
+          <View className="mt-8 flex-row items-center justify-evenly flex-wrap">
+            <ItemCardContainer
+              key={101}
+              imageSource={
+                "https://a.cdn-hotels.com/gdcs/production125/d570/3bb24ad6-7baf-4721-a49e-0a16e9395bf1.jpg?impolicy=fcrop&w=800&h=533&q=small"
+              }
+              title="Phu Quoc, Kien Giang, Vietnam"
+              location="Phú Quốc"
+            />
+            <ItemCardContainer
+              key={102}
+              imageSource={
+                "https://i0.wp.com/vietnaminsider.vn/wp-content/uploads/2021/10/Phu-Quoc-United-Center.jpeg?fit=900%2C563&ssl=1"
+              }
+              title="Phú Quốc "
+              location="Phú Quốc"
+            />
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
