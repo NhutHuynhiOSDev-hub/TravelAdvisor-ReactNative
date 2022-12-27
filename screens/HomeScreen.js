@@ -1,4 +1,4 @@
-import { View, Text, Image, Touchable, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React, { useLayoutEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -40,11 +40,14 @@ const HomeScreen = () => {
           className="h-full w-full object-cover mt-20"
         />
         <View
-          className="absolute bottom-20 w-24 h-24
-          border-l-2 border-r-2 border-t-4 border-[#00BCC9]
+          className="absolute bottom-20 w-24 h-24 border-l-2 border-r-2 border-t-4 border-[#00BCC9]
           rounded-full items-center justify-center"
         >
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("DiscoverScreen");
+            }}
+          >
             <Animatable.View
               animation={"pulse"}
               easing={"ease-in-out"}
