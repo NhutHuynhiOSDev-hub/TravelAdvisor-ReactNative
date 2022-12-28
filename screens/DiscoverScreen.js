@@ -26,7 +26,7 @@ function DiscoverScreen() {
     _loadFeedData();
   }, []);
 
-  _loadFeedData: async () => {
+  const _loadFeedData = async () => {
     await getDiscoverFeedData().then((localData) => {
       if (localData) {
         setMainData(localData);
@@ -130,7 +130,7 @@ function DiscoverScreen() {
                       imageSource={
                         data?.photo?.images?.medium?.url
                           ? data?.photo?.images?.medium?.url
-                          : "https://image.shutterstock.com/image-vector/vector-graphic-no-thumbnail-symbol-260nw-1391095985.jpg"
+                          : "https://us.123rf.com/450wm/benidict83/benidict832008/benidict83200800014/benidict83200800014.jpg?ver=6"
                       }
                       title={data?.name}
                       location={data?.location_string}
