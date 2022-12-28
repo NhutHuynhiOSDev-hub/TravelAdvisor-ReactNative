@@ -4,11 +4,12 @@ import { Image, Text, View } from "react-native-animatable";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-const ItemCardContainer = ({ imageSource, title, location }) => {
+const ItemCardContainer = ({ imageSource, title, location, data }) => {
   const navigation = useNavigation();
+
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate("DetailsScreen", { params: data })}
+      onPress={() => navigation.navigate("DetailsScreen", { param: data })}
       className="rounded-md border border-gray-300 
     space-y-2 p-2 shadow-md bg-white w-[188px]"
     >
