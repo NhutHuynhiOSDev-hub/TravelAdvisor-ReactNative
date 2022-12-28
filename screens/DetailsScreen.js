@@ -1,9 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useLayoutEffect } from "react";
-import { ScrollView, TouchableOpacity } from "react-native";
+import { SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import { Image, Text, View } from "react-native-animatable";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { FontAwesome, FontAwesome5, Entypo } from "@expo/vector-icons";
+
+import { FontAwesome, FontAwesome5, Ionicons } from "@expo/vector-icons";
 
 const DetailsScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -13,8 +13,11 @@ const DetailsScreen = ({ route }) => {
   }, []);
 
   return (
-    <SafeAreaView className="flex-1 bg-white relative">
-      <ScrollView className="flex-1 px-4 py-6">
+    <SafeAreaView className="flex-1 bg-white">
+      <ScrollView
+        className="flex-1 bg-white px-4 py-6"
+        showsVerticalScrollIndicator={true}
+      >
         <View>
           <View className="flex-relative bg-white shadow-lg">
             <Image
@@ -111,7 +114,7 @@ const DetailsScreen = ({ route }) => {
         )}
 
         {data?.cuisine && (
-          <View className="flex-row gap-2 items-center justify-start mt-4">
+          <View className="flex-row gap-2 items-center justify-start flex-wrap mt-4">
             {data?.cuisine.map((n) => (
               <TouchableOpacity
                 key={n.key}
@@ -122,6 +125,32 @@ const DetailsScreen = ({ route }) => {
             ))}
           </View>
         )}
+
+        <View className="items-start space-y-2 justify-center mt-4 rounded-2xl bg-gray-100 px-4 py-2">
+          {data?.phone && (
+            <View className="flex-row space-x-6">
+              <Ionicons name="ios-call" size={24} color="#428288" />
+              <Text className="text-lg">{data.phone}</Text>
+            </View>
+          )}
+          {data?.email && (
+            <View className="flex-row space-x-6">
+              <Ionicons name="mail" size={24} color="#428288" />
+              <Text className="text-lg">{data.email}</Text>
+            </View>
+          )}
+          {data?.address && (
+            <View className="flex-row space-x-6">
+              <Ionicons name="location" size={24} color="#428288" />
+              <Text className="text-lg">{data.address}</Text>
+            </View>
+          )}
+        </View>
+        <TouchableOpacity className="my-4 py-4 rounded-lg bg-[#06B2BE] items-center justify-center">
+          <Text className="text-2xl font-semibold uppercase tracking-wider text-gray-100">
+            Book now
+          </Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
