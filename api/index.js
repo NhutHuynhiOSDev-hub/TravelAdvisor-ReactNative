@@ -5,16 +5,15 @@ export const getPlacesData = async () => {
     const {
       data: { data },
     } = await axios.get(
-      `https://travel-advisor.p.rapidapi.com/hotels/list-in-boundary`,
+      `https://travel-advisor.p.rapidapi.com/restaurants/list-by-latlng`,
       {
         params: {
-          bl_latitude: "11.847676",
-          bl_longitude: "108.473209",
-          tr_longitude: "109.149359",
-          tr_latitude: "12.838442",
+          latitude: "11.9408626",
+          longitude: "108.4521295",
           limit: "30",
           currency: "USD",
-          linut: "km",
+          distance: "2",
+          lunit: "km",
           lang: "en_US",
         },
         headers: {
@@ -26,6 +25,7 @@ export const getPlacesData = async () => {
     );
     return data;
   } catch (error) {
+    console.log("Error ", error);
     return null;
   }
 };

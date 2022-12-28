@@ -9,6 +9,8 @@ import MenuContainer from "../components/MenuContainer";
 import { FontAwesome } from "@expo/vector-icons";
 import ItemCardContainer from "../components/ItemCardContainer";
 import { ActivityIndicator } from "react-native";
+import { getPlacesData } from "../api";
+import { getDiscoverFeedData, setDiscoverFeedData } from "../local_store";
 
 function DiscoverScreen() {
   const navigation = useNavigation();
@@ -18,6 +20,29 @@ function DiscoverScreen() {
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
+
+  React.useEffect(() => {
+    setLoading(true);
+    _loadFeedData();
+  }, []);
+
+  _loadFeedData: async () => {
+    await getDiscoverFeedData().then((localData) => {
+      if (localData) {
+        setMainData(localData);
+        setLoading(false);
+        console.log("LOAD FORM LOCAL");
+      } else {
+        getPlacesData().then((data) => {
+          console.log("LOAD FROM API");
+          setMainData(data);
+          setLoading(false);
+          setDiscoverFeedData(data);
+        });
+      }
+    });
+  };
+
   return (
     <SafeAreaView className="bg-white flex-1 relative">
       <View className="flex-row items-center justify-between px-8">
@@ -97,24 +122,20 @@ function DiscoverScreen() {
             </View>
 
             <View className="mt-8 flex-row items-center justify-evenly flex-wrap">
-              {mainData.length > 0 ? (
+              {mainData?.length > 0 ? (
                 <>
-                  <ItemCardContainer
-                    key={101}
-                    imageSource={
-                      "https://a.cdn-hotels.com/gdcs/production125/d570/3bb24ad6-7baf-4721-a49e-0a16e9395bf1.jpg?impolicy=fcrop&w=800&h=533&q=small"
-                    }
-                    title="Phu Quoc, Kien Giang, Vietnam"
-                    location="Phú Quốc"
-                  />
-                  <ItemCardContainer
-                    key={102}
-                    imageSource={
-                      "https://i0.wp.com/vietnaminsider.vn/wp-content/uploads/2021/10/Phu-Quoc-United-Center.jpeg?fit=900%2C563&ssl=1"
-                    }
-                    title="Phú Quốc "
-                    location="Phú Quốc"
-                  />
+                  {mainData?.map((data, i) => (
+                    <ItemCardContainer
+                      key={i}
+                      imageSource={
+                        data?.photo?.images?.medium?.url
+                          ? data?.photo?.images?.medium?.url
+                          : "https://image.shutterstock.com/image-vector/vector-graphic-no-thumbnail-symbol-260nw-1391095985.jpg"
+                      }
+                      title={data?.name}
+                      location={data?.location_string}
+                    />
+                  ))}
                 </>
               ) : (
                 <View className="w-full h-[400px] items-center space-y-8 justify-center">
