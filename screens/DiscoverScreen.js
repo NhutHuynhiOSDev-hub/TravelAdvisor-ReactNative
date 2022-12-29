@@ -9,7 +9,7 @@ import MenuContainer from "../components/MenuContainer";
 import { FontAwesome } from "@expo/vector-icons";
 import ItemCardContainer from "../components/ItemCardContainer";
 import { ActivityIndicator } from "react-native";
-import { getPlacesData } from "../api";
+import { getNearbyRestaurants, getPlacesData } from "../api";
 import { getDiscoverFeedData, setDiscoverFeedData } from "../local_store";
 
 function DiscoverScreen() {
@@ -17,6 +17,8 @@ function DiscoverScreen() {
   const [type, setType] = useState("hotels");
   const [mainData, setMainData] = useState([]);
   const [isLoading, setLoading] = useState(false);
+  const [latitude, setLat] = useState("10.762622");
+  const [longitude, setLong] = useState("106.660172");
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
@@ -33,7 +35,7 @@ function DiscoverScreen() {
         setLoading(false);
         console.log("LOAD FORM LOCAL");
       } else {
-        getPlacesData().then((data) => {
+        getNearbyRestaurants(latitude, longitude, 30).then((data) => {
           console.log("LOAD FROM API");
           setMainData(data);
           setLoading(false);
@@ -42,6 +44,7 @@ function DiscoverScreen() {
       }
     });
   };
+  // const _checkNewFeedData =
 
   return (
     <SafeAreaView className="bg-white flex-1 relative">
@@ -64,13 +67,14 @@ function DiscoverScreen() {
           fetchDetails={true}
           placeholder="Search"
           onPress={(data, details = null) => {
-            // 'details' is provided when fetchDetails = true
-            console.log(data, details.geometry.viewport);
+            console.log(data, details.geometry);
           }}
           query={{
-            key: "AIzaSyCumCJ3lZDYTkkOZtRvuRdmKs2cQbcRzcQ",
+            key: "AIzaSyCdWSgktvmaJUObfUoN4-mDjg3OhhYgPTg",
             language: "en",
           }}
+          onFail={(error) => console.log("Places API Error: ", error)}
+          onNotFound={() => console.log("no results")}
         />
       </View>
 

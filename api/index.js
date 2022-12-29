@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const getPlacesData = async () => {
+export const getNearbyRestaurants = async ({ lat, long, limit }) => {
   try {
     const {
       data: { data },
