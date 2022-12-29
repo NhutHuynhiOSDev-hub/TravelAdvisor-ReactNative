@@ -3,13 +3,32 @@ import { TouchableOpacity } from "react-native";
 import { Image, Text, View } from "react-native-animatable";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { FILTER_TYPE } from "../const/keys";
 
-const ItemCardContainer = ({ imageSource, title, location, data }) => {
+const ItemCardContainer = ({ imageSource, title, location, data, type }) => {
   const navigation = useNavigation();
+
+  const onPressNavigate = () => {
+    switch (type) {
+      case FILTER_TYPE.HOTELS:
+        console.log("HERE: ", type);
+        navigation.navigate("HotelDetailsScreen", { param: data });
+        break;
+      case FILTER_TYPE.ATTRACTIONS:
+        navigation.navigate("DetailsScreen", { param: data });
+        break;
+      case FILTER_TYPE.RESTAURANTS:
+        console.log("HERE: ", type);
+        navigation.navigate("DetailsScreen", { param: data });
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate("DetailsScreen", { param: data })}
+      onPress={onPressNavigate}
       className="rounded-md border border-gray-300 
     space-y-2 p-2 shadow-md bg-white w-[188px]"
     >

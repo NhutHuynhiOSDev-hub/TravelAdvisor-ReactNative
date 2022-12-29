@@ -23,12 +23,28 @@ const setLatestLong = async (val: string) => {
   return await set(latestLongKey, val);
 };
 
-const getDiscoverFeedData = async () => {
+const getRestaurantsDataFeed = async () => {
   return await getData(restaurantsDataFeedKey);
 };
 
-const setDiscoverFeedData = async (val) => {
+const setRestaurantsDataFeed = async (val) => {
   return await storeData(restaurantsDataFeedKey, val);
+};
+
+const getHotelsDataFeed = async () => {
+  return await getData(hotelsDataFeedKey);
+};
+
+const setHotelsDataFeed = async (val) => {
+  return await storeData(hotelsDataFeedKey, val);
+};
+
+const getAttractionsDataFeed = async () => {
+  return await getData(attractionsDataFeedKey);
+};
+
+const setAttractionsDataFeed = async (val) => {
+  return await storeData(attractionsDataFeedKey, val);
 };
 
 const getLastSelectedType = async () => {
@@ -44,8 +60,12 @@ export {
   setLatestLat,
   getLatestLong,
   setLatestLong,
+  getHotelsDataFeed,
+  setHotelsDataFeed,
   getLastSelectedType,
   setLastSelectedType,
-  getDiscoverFeedData,
-  setDiscoverFeedData,
+  getAttractionsDataFeed,
+  setAttractionsDataFeed,
+  getRestaurantsDataFeed,
+  setRestaurantsDataFeed,
 };

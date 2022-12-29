@@ -9,85 +9,157 @@ import MenuContainer from "../components/MenuContainer";
 import { FontAwesome } from "@expo/vector-icons";
 import ItemCardContainer from "../components/ItemCardContainer";
 import { ActivityIndicator } from "react-native";
-import { getNearbyRestaurants, getPlacesData } from "../api";
+import WebServices, { getNearbyRestaurants, getPlacesData } from "../api";
 import {
-  getDiscoverFeedData,
+  getAttractionsDataFeed,
+  getHotelsDataFeed,
   getLastSelectedType,
   getLatestLat,
   getLatestLong,
-  setDiscoverFeedData,
+  getRestaurantsDataFeed,
+  setAttractionsDataFeed,
+  setHotelsDataFeed,
   setLastSelectedType,
   setLatestLat,
   setLatestLong,
+  setRestaurantsDataFeed,
 } from "../local_store";
 import { FILTER_TYPE, KEY } from "../const/keys";
+import * as Animatable from "react-native-animatable";
 
 function DiscoverScreen() {
   const navigation = useNavigation();
   const [mainData, setMainData] = useState([]);
   const [isLoading, setLoading] = useState(false);
 
-  const [type, setType] = useState("hotels");
-  const [currentLat, setCurrentLat] = useState("10.794805755405216");
-  const [currentLong, setCurrentLong] = useState("106.70890297316676");
+  const [type, setType] = useState(FILTER_TYPE.RESTAURANTS);
+  const [selectedType, setSelectedType] = useState(FILTER_TYPE.HOTELS);
+  const [currentLat, setCurrentLat] = useState(KEY.DEFAULT_LAT);
+  const [currentLong, setCurrentLong] = useState(KEY.DEFAULT_LONG);
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
+
+  // React.useEffect(() => {
+  //   _initialSelectType();
+  // }, []);
 
   React.useEffect(() => {
     _loadFeedData();
   }, [type]);
 
+  // const _initialSelectType = async () => {
+  //   await getLastSelectedType().then((value) => {
+  //     if (!value) {
+  //       setSelectedType(selectedType);
+  //       setLastSelectedType(selectedType);
+  //     } else {
+  //       setSelectedType(value);
+  //       setLastSelectedType(value);
+  //     }
+  //   });
+  // };
+
   const _loadFeedData = async () => {
     setLoading(true);
 
-    await getLastSelectedType().then((value) => {
-      if (!value) {
-        console.log("HERE: ", value);
-        // setType(FILTER_TYPE.HOTELS);
-        // setLastSelectedType(FILTER_TYPE.HOTELS);
+    switch (type) {
+      case FILTER_TYPE.HOTELS:
+        _loadHotelsData();
+
+        break;
+      case FILTER_TYPE.ATTRACTIONS:
+        _loadAttractionsData();
+
+        break;
+      case FILTER_TYPE.RESTAURANTS:
+        _loadRestaurantsData();
+        break;
+      default:
+        break;
+    }
+  };
+
+  const _loadRestaurantsData = async () => {
+    await getRestaurantsDataFeed().then((localData) => {
+      if (localData) {
+        setMainData(localData);
+        setLoading(false);
+        console.log("RESTAURANTS LOAD FROM LOCAL");
       } else {
-        console.log("HERE: ");
+        WebServices.getNearbyRestaurants(
+          currentLat,
+          currentLong,
+          KEY.LIMIT_ITEM
+        ).then((data) => {
+          setMainData(data);
+          setLoading(false);
+          setRestaurantsDataFeed(data);
+          console.log("RESTAURANTS LOAD FROM API");
+        });
       }
-      // setType(value);
-      // setLastSelectedType(value);
-      // console.log("HERE: ", type);
-      // _loadFeedData();
     });
-    // await getDiscoverFeedData().then((localData) => {
-    //   if (localData || !_checkRefreshLocation()) {
-    //     setMainData(localData);
-    //     setLoading(false);
-    //     console.log("LOAD FROM LOCAL");
-    //   } else {
-    //     console.log("LOAD FROM API");
-    //     getNearbyRestaurants(currentLat, currentLong, ENV.LIMIT_ITEM).then(
-    //       (data) => {
-    //         setMainData(data);
-    //         setLoading(false);
-    //         setDiscoverFeedData(data);
-    //       }
-    //     );
-    //   }
-    // });
+  };
+
+  const _loadHotelsData = async () => {
+    await getHotelsDataFeed().then((localData) => {
+      if (localData) {
+        setMainData(localData);
+        setLoading(false);
+        console.log("HOTELS LOAD FROM LOCAL");
+      } else {
+        WebServices.getNearbyHotels(
+          currentLat,
+          currentLong,
+          KEY.LIMIT_ITEM
+        ).then((data) => {
+          setMainData(data);
+          setLoading(false);
+          setHotelsDataFeed(data);
+        });
+        console.log("HOTELS LOAD FROM API");
+      }
+    });
+  };
+
+  const _loadAttractionsData = async () => {
+    await getAttractionsDataFeed().then((localData) => {
+      if (localData) {
+        setMainData(localData);
+        setLoading(false);
+        console.log("ATTRACTIONS LOAD FROM LOCAL");
+      } else {
+        WebServices.getNearbyAttractions(
+          currentLat,
+          currentLong,
+          KEY.LIMIT_ITEM
+        ).then((data) => {
+          setMainData(data);
+          setLoading(false);
+          setAttractionsDataFeed(data);
+        });
+        console.log("ATTRACTIONS LOAD FROM API");
+      }
+    });
   };
 
   const _checkRefreshLocation = async () => {
     const latestLat = await getLatestLat();
     const latestLong = await getLatestLong();
 
-    if (
-      (latestLat && latestLat && currentLat !== latestLat) ||
-      currentLong !== latestLong
-    ) {
-      setLatestLat(currentLat);
-      setLatestLong(currentLong);
-      console.log("NEED FETCH");
-      return true;
-    } else {
-      console.log("NOT NEED FETCH");
-      return false;
-    }
+    // if (
+    //   (latestLat && latestLong && currentLat !== latestLat) ||
+    //   currentLong !== latestLong
+    // ) {
+    //   // setLatestLat(currentLat);
+    //   // setLatestLong(currentLong);
+    //   console.log("OLD LOCATION");
+    //   // return true;
+    // } else {
+    //   console.log("NEW LOCATION");
+    //   // return false;
+    // }
+    return true;
   };
 
   return (
@@ -123,37 +195,37 @@ function DiscoverScreen() {
         />
       </View>
 
-      {isLoading ? (
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size={"large"} color="#0B646B" />
+      <ScrollView>
+        <View className="flex-row items-center justify-between px-4 mt-8">
+          <MenuContainer
+            key={FILTER_TYPE.HOTELS}
+            title={"Hotels"}
+            imageSource={Hotels}
+            type={type}
+            setSelectedType={setType}
+          />
+          <MenuContainer
+            key={FILTER_TYPE.ATTRACTIONS}
+            title={"Attractions"}
+            imageSource={Attractions}
+            type={type}
+            setSelectedType={setType}
+          />
+          <MenuContainer
+            key={FILTER_TYPE.RESTAURANTS}
+            title={"Restaurants"}
+            imageSource={Restaurants}
+            type={type}
+            setSelectedType={setType}
+          />
         </View>
-      ) : (
-        <ScrollView>
-          <View className="flex-row items-center justify-between px-4 mt-8">
-            <MenuContainer
-              key={"hotels"}
-              title={"Hotels"}
-              imageSource={Hotels}
-              type={type}
-              setType={setType}
-            />
-            <MenuContainer
-              key={"attractions"}
-              title={"Attractions"}
-              imageSource={Attractions}
-              type={type}
-              setType={setType}
-            />
-            <MenuContainer
-              key={"restaurants"}
-              title={"Restaurants"}
-              imageSource={Restaurants}
-              type={type}
-              setType={setType}
-            />
-          </View>
 
-          <View>
+        {isLoading ? (
+          <View className="items-center justify-center mt-40">
+            <ActivityIndicator size={"large"} color="#0B646B" />
+          </View>
+        ) : (
+          <Animatable.View animation={"fadeIn"} easing={"ease-in-out"}>
             <View className="flex-row items-center justify-between px-4 mt-8">
               <Text className="text-[28px] text-[#0B646B] font-bold">
                 Tool Tips
@@ -184,6 +256,7 @@ function DiscoverScreen() {
                       title={data?.name}
                       location={data?.location_string}
                       data={data}
+                      type={type}
                     />
                   ))}
                 </>
@@ -191,7 +264,7 @@ function DiscoverScreen() {
                 <View className="w-full h-[400px] items-center space-y-8 justify-center">
                   <Image
                     source={NotFound}
-                    className="w-32 h-32 object-contain"
+                    classNamer="w-32 h-32 object-contain"
                   />
                   <Text className="text-2xl text-[#0B646B] font-semibold">
                     Opps...No Data Found
@@ -199,9 +272,9 @@ function DiscoverScreen() {
                 </View>
               )}
             </View>
-          </View>
-        </ScrollView>
-      )}
+          </Animatable.View>
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 }

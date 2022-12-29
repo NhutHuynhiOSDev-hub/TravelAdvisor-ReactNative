@@ -5,7 +5,7 @@ import { Image, Text, View } from "react-native-animatable";
 
 import { FontAwesome, FontAwesome5, Ionicons } from "@expo/vector-icons";
 
-const DetailsScreen = ({ route }) => {
+const HotelDetailsScreen = ({ route }) => {
   const navigation = useNavigation();
   const data = route?.params?.param;
   useLayoutEffect(() => {
@@ -128,22 +128,22 @@ const DetailsScreen = ({ route }) => {
         )}
 
         <View className="items-start space-y-2 justify-center mt-4 rounded-2xl bg-gray-100 px-4 py-2">
-          {data?.phone && (
+          {data?.hotel_class && (
             <View className="flex-row space-x-6">
               <Ionicons name="ios-call" size={24} color="#428288" />
-              <Text className="text-lg">{data.phone}</Text>
+              <Text className="text-lg">{data.hotel_class}</Text>
             </View>
           )}
-          {data?.email && (
+          {data?.hotel_class_attribution && (
             <View className="flex-row space-x-6">
               <Ionicons name="mail" size={24} color="#428288" />
-              <Text className="text-lg">{data.email}</Text>
+              <Text className="text-lg">{data.hotel_class_attribution}</Text>
             </View>
           )}
-          {data?.address && (
+          {data?.ranking && (
             <View className="flex-row space-x-6">
               <Ionicons name="location" size={24} color="#428288" />
-              <Text className="text-lg">{data.address}</Text>
+              <Text className="text-lg">{data.ranking}</Text>
             </View>
           )}
         </View>
@@ -157,4 +157,4 @@ const DetailsScreen = ({ route }) => {
   );
 };
 
-export default DetailsScreen;
+export default HotelDetailsScreen;

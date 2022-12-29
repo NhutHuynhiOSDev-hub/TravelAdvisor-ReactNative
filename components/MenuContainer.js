@@ -2,10 +2,9 @@ import React from "react";
 import { TouchableOpacity } from "react-native";
 import { Image, Text, View } from "react-native-animatable";
 
-function MenuContainer({ title, imageSource, type, setType }) {
+function MenuContainer({ title, imageSource, type, setSelectedType }) {
   const handlePress = () => {
-    console.log("HERE: ", type);
-    setType(title.toLowerCase());
+    setSelectedType(title.toLowerCase());
   };
   return (
     <TouchableOpacity
