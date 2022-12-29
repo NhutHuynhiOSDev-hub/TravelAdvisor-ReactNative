@@ -45,7 +45,7 @@ const HomeScreen = () => {
         >
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("DiscoverScreen");
+              navigation.navigate("DiscoveryScreen");
             }}
           >
             <Animatable.View

@@ -11,15 +11,13 @@ const ItemCardContainer = ({ imageSource, title, location, data, type }) => {
   const onPressNavigate = () => {
     switch (type) {
       case FILTER_TYPE.HOTELS:
-        console.log("HERE: ", type);
         navigation.navigate("HotelDetailsScreen", { param: data });
         break;
       case FILTER_TYPE.ATTRACTIONS:
-        navigation.navigate("DetailsScreen", { param: data });
+        navigation.navigate("AttractionDetailsScreen", { param: data });
         break;
       case FILTER_TYPE.RESTAURANTS:
-        console.log("HERE: ", type);
-        navigation.navigate("DetailsScreen", { param: data });
+        navigation.navigate("RestaurantDetailsScreen", { param: data });
         break;
       default:
         break;
