@@ -12,22 +12,24 @@ import { ActivityIndicator } from "react-native";
 import { getNearbyRestaurants, getPlacesData } from "../api";
 import {
   getDiscoverFeedData,
+  getLastSelectedType,
   getLatestLat,
   getLatestLong,
   setDiscoverFeedData,
+  setLastSelectedType,
   setLatestLat,
   setLatestLong,
 } from "../local_store";
-import ENV from "../const/keys";
+import { FILTER_TYPE, KEY } from "../const/keys";
 
 function DiscoverScreen() {
   const navigation = useNavigation();
-  const [type, setType] = useState("hotels");
   const [mainData, setMainData] = useState([]);
   const [isLoading, setLoading] = useState(false);
 
-  const [currentLat, setCurrentLat] = useState(ENV.DEFAULT_LAT);
-  const [currentLong, setCurrentLong] = useState(ENV.DEFAULT_LONG);
+  const [type, setType] = useState("hotels");
+  const [currentLat, setCurrentLat] = useState("10.794805755405216");
+  const [currentLong, setCurrentLong] = useState("106.70890297316676");
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
@@ -38,22 +40,36 @@ function DiscoverScreen() {
 
   const _loadFeedData = async () => {
     setLoading(true);
-    await getDiscoverFeedData().then((localData) => {
-      if (localData || !_checkRefreshLocation()) {
-        setMainData(localData);
-        setLoading(false);
-        console.log("LOAD FROM LOCAL");
+
+    await getLastSelectedType().then((value) => {
+      if (!value) {
+        console.log("HERE: ", value);
+        // setType(FILTER_TYPE.HOTELS);
+        // setLastSelectedType(FILTER_TYPE.HOTELS);
       } else {
-        console.log("LOAD FROM API");
-        getNearbyRestaurants(currentLat, currentLong, ENV.LIMIT_ITEM).then(
-          (data) => {
-            setMainData(data);
-            setLoading(false);
-            setDiscoverFeedData(data);
-          }
-        );
+        console.log("HERE: ");
       }
+      // setType(value);
+      // setLastSelectedType(value);
+      // console.log("HERE: ", type);
+      // _loadFeedData();
     });
+    // await getDiscoverFeedData().then((localData) => {
+    //   if (localData || !_checkRefreshLocation()) {
+    //     setMainData(localData);
+    //     setLoading(false);
+    //     console.log("LOAD FROM LOCAL");
+    //   } else {
+    //     console.log("LOAD FROM API");
+    //     getNearbyRestaurants(currentLat, currentLong, ENV.LIMIT_ITEM).then(
+    //       (data) => {
+    //         setMainData(data);
+    //         setLoading(false);
+    //         setDiscoverFeedData(data);
+    //       }
+    //     );
+    //   }
+    // });
   };
 
   const _checkRefreshLocation = async () => {

@@ -3,6 +3,7 @@ import { get, getData, set, storeData } from "./manipulate";
 const latestLatKey = "LatestLat";
 const latestLongKey = "LatestLong";
 const hotelsDataFeedKey = "HotelsDataFeed";
+const lastSelectedTypeKey = "LastSelectedType";
 const restaurantsDataFeedKey = "RestaurantsDataFeed";
 const attractionsDataFeedKey = "AttractionsDataFeed";
 
@@ -30,11 +31,21 @@ const setDiscoverFeedData = async (val) => {
   return await storeData(restaurantsDataFeedKey, val);
 };
 
+const getLastSelectedType = async () => {
+  return await get(lastSelectedTypeKey);
+};
+
+const setLastSelectedType = async (val: string) => {
+  return await set(lastSelectedTypeKey, val);
+};
+
 export {
   getLatestLat,
   setLatestLat,
   getLatestLong,
   setLatestLong,
+  getLastSelectedType,
+  setLastSelectedType,
   getDiscoverFeedData,
   setDiscoverFeedData,
 };
