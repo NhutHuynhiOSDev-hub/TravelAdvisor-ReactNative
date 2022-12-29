@@ -10,41 +10,69 @@ import { FontAwesome } from "@expo/vector-icons";
 import ItemCardContainer from "../components/ItemCardContainer";
 import { ActivityIndicator } from "react-native";
 import { getNearbyRestaurants, getPlacesData } from "../api";
-import { getDiscoverFeedData, setDiscoverFeedData } from "../local_store";
+import {
+  getDiscoverFeedData,
+  getLatestLat,
+  getLatestLong,
+  setDiscoverFeedData,
+  setLatestLat,
+  setLatestLong,
+} from "../local_store";
+import ENV from "../const/keys";
 
 function DiscoverScreen() {
   const navigation = useNavigation();
   const [type, setType] = useState("hotels");
   const [mainData, setMainData] = useState([]);
   const [isLoading, setLoading] = useState(false);
-  const [latitude, setLat] = useState("10.762622");
-  const [longitude, setLong] = useState("106.660172");
+
+  const [currentLat, setCurrentLat] = useState(ENV.DEFAULT_LAT);
+  const [currentLong, setCurrentLong] = useState(ENV.DEFAULT_LONG);
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
 
   React.useEffect(() => {
-    setLoading(true);
     _loadFeedData();
-  }, []);
+  }, [type]);
 
   const _loadFeedData = async () => {
+    setLoading(true);
     await getDiscoverFeedData().then((localData) => {
-      if (localData) {
+      if (localData || !_checkRefreshLocation()) {
         setMainData(localData);
         setLoading(false);
-        console.log("LOAD FORM LOCAL");
+        console.log("LOAD FROM LOCAL");
       } else {
-        getNearbyRestaurants(latitude, longitude, 30).then((data) => {
-          console.log("LOAD FROM API");
-          setMainData(data);
-          setLoading(false);
-          setDiscoverFeedData(data);
-        });
+        console.log("LOAD FROM API");
+        getNearbyRestaurants(currentLat, currentLong, ENV.LIMIT_ITEM).then(
+          (data) => {
+            setMainData(data);
+            setLoading(false);
+            setDiscoverFeedData(data);
+          }
+        );
       }
     });
   };
-  // const _checkNewFeedData =
+
+  const _checkRefreshLocation = async () => {
+    const latestLat = await getLatestLat();
+    const latestLong = await getLatestLong();
+
+    if (
+      (latestLat && latestLat && currentLat !== latestLat) ||
+      currentLong !== latestLong
+    ) {
+      setLatestLat(currentLat);
+      setLatestLong(currentLong);
+      console.log("NEED FETCH");
+      return true;
+    } else {
+      console.log("NOT NEED FETCH");
+      return false;
+    }
+  };
 
   return (
     <SafeAreaView className="bg-white flex-1 relative">
@@ -67,10 +95,11 @@ function DiscoverScreen() {
           fetchDetails={true}
           placeholder="Search"
           onPress={(data, details = null) => {
-            console.log(data, details.geometry);
+            console.log("LAT", details.location.latitude);
+            console.log("LONG", details.location.longitude);
           }}
           query={{
-            key: "AIzaSyCdWSgktvmaJUObfUoN4-mDjg3OhhYgPTg",
+            key: "",
             language: "en",
           }}
           onFail={(error) => console.log("Places API Error: ", error)}

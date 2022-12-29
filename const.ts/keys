@@ -1,7 +1,0 @@
-const PLACE_API_KEY = "Config.ROOT_URL;";
-
-const ENV = {
-  PLACE_API_KEY: PLACE_API_KEY
-};
-
-export default ENV;

@@ -5,12 +5,12 @@ export const getNearbyRestaurants = async ({ lat, long, limit }) => {
     const {
       data: { data },
     } = await axios.get(
-      `https://travel-advisor.p.rapidapi.com/restaurants/list-by-latlng`,
+      "https://travel-advisor.p.rapidapi.com/restaurants/list-by-latlng",
       {
         params: {
-          latitude: "11.9408626",
-          longitude: "108.4521295",
-          limit: "30",
+          latitude: "10.794805755405216",
+          longitude: "106.70890297316676",
+          limit: limit,
           currency: "USD",
           distance: "2",
           lunit: "km",
@@ -23,6 +23,7 @@ export const getNearbyRestaurants = async ({ lat, long, limit }) => {
         },
       }
     );
+    console.log("LOAD FROM API", data);
     return data;
   } catch (error) {
     console.log("Error ", error);
