@@ -7,6 +7,8 @@ const lastSelectedTypeKey = "LastSelectedType";
 const restaurantsDataFeedKey = "RestaurantsDataFeed";
 const attractionsDataFeedKey = "AttractionsDataFeed";
 
+const sampleHotelDetailsKey = "SampleHotelDetails";
+
 const getLatestLat = async () => {
   return await get(latestLatKey);
 };
@@ -55,6 +57,14 @@ const setLastSelectedType = async (val: string) => {
   return await set(lastSelectedTypeKey, val);
 };
 
+const getSampleHotelDetails = async () => {
+  return await getData(sampleHotelDetailsKey);
+};
+
+const setSampleHotelDetails = async (val) => {
+  return await storeData(sampleHotelDetailsKey, val);
+};
+
 export {
   getLatestLat,
   setLatestLat,
@@ -68,4 +78,6 @@ export {
   setAttractionsDataFeed,
   getRestaurantsDataFeed,
   setRestaurantsDataFeed,
+  getSampleHotelDetails,
+  setSampleHotelDetails,
 };

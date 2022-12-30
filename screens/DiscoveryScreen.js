@@ -9,7 +9,7 @@ import MenuContainer from "../components/MenuContainer";
 import { FontAwesome } from "@expo/vector-icons";
 import ItemCardContainer from "../components/ItemCardContainer";
 import { ActivityIndicator } from "react-native";
-import WebServices, { getNearbyRestaurants, getPlacesData } from "../api";
+import WebServices from "../api";
 import {
   getAttractionsDataFeed,
   getHotelsDataFeed,
@@ -39,26 +39,9 @@ function DiscoverScreen() {
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
-
-  // React.useEffect(() => {
-  //   _initialSelectType();
-  // }, []);
-
   React.useEffect(() => {
     _loadFeedData();
   }, [type]);
-
-  // const _initialSelectType = async () => {
-  //   await getLastSelectedType().then((value) => {
-  //     if (!value) {
-  //       setSelectedType(selectedType);
-  //       setLastSelectedType(selectedType);
-  //     } else {
-  //       setSelectedType(value);
-  //       setLastSelectedType(value);
-  //     }
-  //   });
-  // };
 
   const _loadFeedData = async () => {
     setLoading(true);
@@ -73,7 +56,8 @@ function DiscoverScreen() {
 
         break;
       case FILTER_TYPE.RESTAURANTS:
-        _loadRestaurantsData();
+        _loadRestau;
+        rantsData();
         break;
       default:
         break;
@@ -141,25 +125,6 @@ function DiscoverScreen() {
         console.log("ATTRACTIONS LOAD FROM API");
       }
     });
-  };
-
-  const _checkRefreshLocation = async () => {
-    const latestLat = await getLatestLat();
-    const latestLong = await getLatestLong();
-
-    // if (
-    //   (latestLat && latestLong && currentLat !== latestLat) ||
-    //   currentLong !== latestLong
-    // ) {
-    //   // setLatestLat(currentLat);
-    //   // setLatestLong(currentLong);
-    //   console.log("OLD LOCATION");
-    //   // return true;
-    // } else {
-    //   console.log("NEW LOCATION");
-    //   // return false;
-    // }
-    return true;
   };
 
   return (
@@ -261,11 +226,7 @@ function DiscoverScreen() {
                   ))}
                 </>
               ) : (
-                <View className="w-full h-[400px] items-center space-y-8 justify-center">
-                  <Image
-                    source={NotFound}
-                    classNamer="w-32 h-32 object-contain"
-                  />
+                <View className="h-[300px] items-center justify-center space-y-8 ">
                   <Text className="text-2xl text-[#0B646B] font-semibold">
                     Opps...No Data Found
                   </Text>

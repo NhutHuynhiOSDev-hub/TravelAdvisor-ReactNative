@@ -30,6 +30,29 @@ const WebServices = {
     }
   },
 
+  getRestaurantDetails: async (id) => {
+    try {
+      const data = await axios.get(
+        "https://travel-advisor.p.rapidapi.com/restaurants/get-details",
+        {
+          params: {
+            location_id: id,
+          },
+          headers: {
+            "X-RapidAPI-Key": KEY.X_RapidAPI_Key,
+            "X-RapidAPI-Host": KEY.X_RapidAPI_Host,
+          },
+        }
+      );
+
+      console.log("DATA: ", data);
+      return data.params;
+    } catch (error) {
+      console.log("Error ", error);
+      return null;
+    }
+  },
+
   getNearbyHotels: async (lat, long, limit) => {
     try {
       const {
@@ -48,6 +71,30 @@ const WebServices = {
           },
         }
       );
+      return data;
+    } catch (error) {
+      console.log("Error ", error);
+      return null;
+    }
+  },
+
+  getHotelDetails: async (id) => {
+    try {
+      const {
+        data: { data },
+      } = await axios.get(
+        "https://travel-advisor.p.rapidapi.com/hotels/get-details",
+        {
+          params: {
+            location_id: id,
+          },
+          headers: {
+            "X-RapidAPI-Key": KEY.X_RapidAPI_Key,
+            "X-RapidAPI-Host": KEY.X_RapidAPI_Host,
+          },
+        }
+      );
+      console.log("RETURN DATA", data);
       return data;
     } catch (error) {
       console.log("Error ", error);
